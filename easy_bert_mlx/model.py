@@ -21,6 +21,7 @@ class TransformerEncoderLayer(nn.Module):
         num_heads: int,
         mlp_dims: Optional[int] = None,
         layer_norm_eps: float = 1e-12,
+        approx = 'none'
     ):
         super().__init__()
         mlp_dims = mlp_dims or dims * 4
@@ -29,7 +30,7 @@ class TransformerEncoderLayer(nn.Module):
         self.ln2 = nn.LayerNorm(dims, eps=layer_norm_eps)
         self.linear1 = nn.Linear(dims, mlp_dims)
         self.linear2 = nn.Linear(mlp_dims, dims)
-        self.gelu = nn.GELU()
+        self.gelu = nn.GELU(approx=approx)
 
     def __call__(self, x, mask):
         attention_out = self.attention(x, x, x, mask)
@@ -45,11 +46,11 @@ class TransformerEncoderLayer(nn.Module):
 
 class TransformerEncoder(nn.Module):
     def __init__(
-        self, num_layers: int, dims: int, num_heads: int, mlp_dims: Optional[int] = None
+        self, num_layers: int, dims: int, num_heads: int, mlp_dims: Optional[int] = None, approx = 'none'
     ):
         super().__init__()
         self.layers = [
-            TransformerEncoderLayer(dims, num_heads, mlp_dims)
+            TransformerEncoderLayer(dims, num_heads, mlp_dims, approx=approx)
             for i in range(num_layers)
         ]
 
@@ -91,7 +92,7 @@ class BertEmbeddings(nn.Module):
 
 
 class Bert(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, approx='none'):
         super().__init__()
         self.embeddings = BertEmbeddings(config)
         self.encoder = TransformerEncoder(
@@ -99,6 +100,7 @@ class Bert(nn.Module):
             dims=config.hidden_size,
             num_heads=config.num_attention_heads,
             mlp_dims=config.intermediate_size,
+            approx=approx
         )
         self.pooler = nn.Linear(config.hidden_size, config.hidden_size)
 
@@ -142,7 +144,7 @@ class Bert(nn.Module):
 
 
 def load_model(
-    bert_model: str, weights_path: str
+    bert_model: str, weights_path: str, approx='none'
 ) -> Tuple[Bert, PreTrainedTokenizerBase]:
     if not Path(weights_path).exists():
         raise ValueError(f"No model weights found in {weights_path}")
@@ -159,7 +161,7 @@ def load_model(
 
 
 def load_model_huggingface(
-        bert_model: str
+        bert_model: str, approx = 'none'
 ) -> Tuple[Bert, PreTrainedTokenizerBase]:
     """
     Loads a BERT-like model and tokenizer from the Hugging Face Hub.
@@ -182,7 +184,7 @@ def load_model_huggingface(
     config = AutoConfig.from_pretrained(bert_model)
 
     # Create and update the model
-    model = Bert(config)
+    model = Bert(config, approx)
 
     # Load the weights
     model.load_weights(weights_path)
