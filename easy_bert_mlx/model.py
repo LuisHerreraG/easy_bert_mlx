@@ -168,6 +168,8 @@ def load_model_huggingface(
 
     This function automatically downloads pre-converted MLX weights from
     the 'mlx-community' organization on Hugging Face.
+    :arg bert_model: Bert model name.
+    :arg approx: Choose between 'none', 'precise' or 'fast'. 'none' by default.
     """
     # Construct the Hugging Face repo ID for the MLX model
     mlx_repo_id = f"mlx-community/{bert_model}-mlx"
