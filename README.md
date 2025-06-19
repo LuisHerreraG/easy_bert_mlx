@@ -5,7 +5,7 @@ This is a fast implementation for everyone who needs it for BERT in the MLX Fram
 ## Installation
 
 ```
-pip install git+https://github.com/yourusername/easy_bert_mlx.git
+pip install git+https://github.com/LuisHerreraG/easy_bert_mlx.git
 ```
 
 That's it!
