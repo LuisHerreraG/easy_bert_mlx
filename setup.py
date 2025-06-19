@@ -9,8 +9,8 @@ setup(
         "mlx",
         "huggingface_hub",
     ],
-    description="A simplified package to use BERT with MLX",
-    author="Your Name",
-    author_email="your.email@example.com",
-    url="https://github.com/yourusername/easy_bert_mlx",
+    description = "A simplified package to use BERT with MLX",
+    author = "Luis Herrera G.",
+    author_email = "u202218227@upc.edu.pe",
+    url = "https://github.com/LuisHerreraG/easy_bert_mlx",
 )

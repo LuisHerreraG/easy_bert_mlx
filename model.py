@@ -159,18 +159,25 @@ def load_model(
 
 
 def load_model_huggingface(
-        bert_model: str, weights_path: Optional[str] = None
+        bert_model: str
 ) -> Tuple[Bert, PreTrainedTokenizerBase]:
-    if weights_path is None:
-        # Manually download weights from Hugging Face Hub if not provided
-        weights_path = hf_hub_download(
-            repo_id="mlx-community/bert-base-uncased-mlx",
-            filename="weights.npz"
-        )
+    """
+    Loads a BERT-like model and tokenizer from the Hugging Face Hub.
 
-        # Ensure the file is downloaded into the cache
-        cache_dir = os.path.dirname(weights_path)
-        print(f"Model weights downloaded to {cache_dir}")
+    This function automatically downloads pre-converted MLX weights from
+    the 'mlx-community' organization on Hugging Face.
+    """
+    # Construct the Hugging Face repo ID for the MLX model
+    mlx_repo_id = f"mlx-community/{bert_model}-mlx"
+
+    try:
+        weights_path = hf_hub_download(repo_id=mlx_repo_id, filename="weights.npz")
+    except Exception as e:
+        print(f"Could not find pre-converted MLX weights at {mlx_repo_id}.")
+        print(f"Original error: {e}")
+        print("Please ensure the model has been converted and uploaded to mlx-community,")
+        print("or use convert.py to convert weights manually and load them from a local path.")
+        raise e
 
     config = AutoConfig.from_pretrained(bert_model)
 
