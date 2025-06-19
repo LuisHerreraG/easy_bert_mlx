@@ -5,7 +5,7 @@ This is a fast implementation for everyone who needs it for BERT in the MLX Fram
 ## Installation
 
 ```
-pip install easy-bert-mlx
+pip install git+https://github.com/yourusername/easy_bert_mlx.git
 ```
 
 That's it!
@@ -22,10 +22,10 @@ That's it, it will be downloaded in your HuggingFace cache and can be used like 
 
 You can use DistilBERT too, I have tested it.
 
-To truly use its inference though, I will hopefully update the README.md soon! This was made to make a bigger project which I'm making easier to manage.
+To truly use its inference though, I will hopefully update the README.md soon! This was made to make a bigger project which I will release soon (hopefully too).
 
 ## Final Words
 
-That's all, xoxo
+That's all, xoxo.
 
 MKU64.
